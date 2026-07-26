@@ -177,6 +177,7 @@
                             <th class="p-3 border-b">משתתפים</th>
                             <th class="p-3 border-b">טלפון</th>
                             <th class="p-3 border-b">תאריך הרשמה</th>
+                            <th class="p-3 border-b text-center">פעולות</th>
                         </tr>
                     </thead>
                     <tbody id="registrationsTableBody" class="text-gray-700 text-sm divide-y divide-gray-100">
@@ -337,7 +338,7 @@
                 noDataMessage.classList.add('hidden');
                 document.querySelector('table').classList.remove('hidden');
                 
-                registrations.forEach(reg => {
+                registrations.forEach((reg, index) => {
                     // Extract number from string (e.g., "5+" becomes 5)
                     let count = parseInt(reg.attendees.replace('+', '')) || 0;
                     total += count;
@@ -348,6 +349,13 @@
                         <td class="p-3 border-b">${reg.attendees}</td>
                         <td class="p-3 border-b" dir="ltr" style="text-align: right;">${reg.phone}</td>
                         <td class="p-3 border-b text-gray-500">${reg.date}</td>
+                        <td class="p-3 border-b text-center">
+                            <button onclick="deleteRegistration(${index})" class="text-red-400 hover:text-red-600 transition-colors bg-red-50 hover:bg-red-100 p-2 rounded-lg" title="מחק נרשם">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -364,6 +372,13 @@
             const originalText = btn.textContent;
             btn.textContent = 'הנתונים נמחקו!';
             setTimeout(() => { btn.textContent = originalText; }, 2000);
+        }
+
+        function deleteRegistration(index) {
+            let registrations = JSON.parse(localStorage.getItem('tuBavRegistrations') || '[]');
+            registrations.splice(index, 1);
+            localStorage.setItem('tuBavRegistrations', JSON.stringify(registrations));
+            loadAdminData();
         }
     </script>
 </body>
